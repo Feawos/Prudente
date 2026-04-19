@@ -15,6 +15,7 @@ public final class TransactionMapper {
         row.put("date", tx.date().toString());
         row.put("amount", tx.money().amount().toString());
         row.put("currency", tx.money().currency().code());
+        row.put("category", tx.category().map(Enum::name).orElse(""));
 
         if (tx instanceof Transaction.Debit) {
             row.put("type", "debit");

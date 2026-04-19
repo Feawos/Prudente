@@ -23,7 +23,7 @@ public class CsvExportService {
 
         List<Transaction> transactions = txService.all();
 
-        String header = "date,amount,currency,type,fromAccount,toAccount";
+        String header = "date,amount,currency,type,category,fromAccount,toAccount";
 
         String rows = transactions.stream()
                 .map(TransactionMapper::toMap)
@@ -32,6 +32,7 @@ public class CsvExportService {
                         map.getOrDefault("amount", ""),
                         map.getOrDefault("currency", ""),
                         map.getOrDefault("type", ""),
+                        map.getOrDefault("category", ""),
                         map.getOrDefault("fromAccount", ""),
                         map.getOrDefault("toAccount", "")
                 ))

@@ -1,5 +1,6 @@
 package com.pfm.service;
 
+import com.pfm.model.Category;
 import com.pfm.model.Money;
 import com.pfm.model.Transaction;
 import org.springframework.stereotype.Service;
@@ -17,14 +18,14 @@ public class TransactionService {
         return List.copyOf(store);
     }
 
-    public Transaction recordDebit(Money money, LocalDate date, String accountId) {
-        Transaction t = new Transaction.Debit(money, date);
+    public Transaction recordDebit(Money money, LocalDate date, String accountId, Category category) {
+        Transaction t = new Transaction.Debit(money, date, category);
         store.add(t);
         return t;
     }
 
-    public Transaction recordCredit(Money money, LocalDate date, String accountId) {
-        Transaction t = new Transaction.Credit(money, date);
+    public Transaction recordCredit(Money money, LocalDate date, String accountId, Category category) {
+        Transaction t = new Transaction.Credit(money, date, category);
         store.add(t);
         return t;
     }
@@ -37,7 +38,7 @@ public class TransactionService {
 
     public String exportAllTransactions() {
         StringBuilder sb = new StringBuilder();
-        sb.append("TYPE,AMOUNT,CURRENCY,DATE,FROM,TO\n");
+        sb.append("TYPE,AMOUNT,CURRENCY,DATE,CATEGORY,FROM,TO\n");
 
         for (Transaction tx : store) {
 
@@ -46,6 +47,7 @@ public class TransactionService {
                         .append(d.money().amount()).append(",")
                         .append(d.money().currency()).append(",")
                         .append(d.date()).append(",")
+                        .append(d.category().map(Enum::name).orElse("")).append(",")
                         .append(",") // from
                         .append("\n"); // to
             }
@@ -55,6 +57,7 @@ public class TransactionService {
                         .append(c.money().amount()).append(",")
                         .append(c.money().currency()).append(",")
                         .append(c.date()).append(",")
+                        .append(c.category().map(Enum::name).orElse("")).append(",")
                         .append(",") // from
                         .append("\n"); // to
             }
@@ -64,6 +67,7 @@ public class TransactionService {
                         .append(t.money().amount()).append(",")
                         .append(t.money().currency()).append(",")
                         .append(t.date()).append(",")
+                        .append(",")
                         .append(t.fromAccount()).append(",")
                         .append(t.toAccount())
                         .append("\n");
